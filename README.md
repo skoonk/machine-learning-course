@@ -1,2 +1,2 @@
 # machine-learning-course
-Course material and projects for machine learning.
+Contains material and experiments in machine learning. This is a general repository containing homework and projects.
