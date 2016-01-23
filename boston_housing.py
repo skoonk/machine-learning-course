@@ -5,11 +5,8 @@ import numpy as np
 import pylab as pl
 from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
-
-################################
-### ADD EXTRA LIBRARIES HERE ###
-################################
-
+from sklearn.cross_validation import train_test_split
+from sklearn.metrics import r2_score
 
 def load_data():
     """Load the Boston dataset."""
@@ -24,19 +21,18 @@ def explore_city_data(city_data):
     # Get the labels and features from the housing data
     housing_prices = city_data.target
     housing_features = city_data.data
-
-    ###################################
-    ### Step 1. YOUR CODE GOES HERE ###
-    ###################################
-
-    # Please calculate the following values using the Numpy library
-    # Size of data (number of houses)?
-    # Number of features?
-    # Minimum price?
-    # Maximum price?
-    # Calculate mean price?
-    # Calculate median price?
-    # Calculate standard deviation?
+    
+    # Calculate features per project requirements
+    print 'Size of data (number of houses): ' + str(len(housing_prices))
+    print 'Number of features: ' + str(housing_features.shape[1])
+    
+    # Note: Median value of owner-occupied homes in $1000's. See
+    # https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names
+    print 'Minimum price: $' + str(np.min(housing_prices)) + 'K'
+    print 'Maximum price: $' + str(np.max(housing_prices)) + 'K'
+    print 'Mean price: $' + str(round(np.mean(housing_prices),1)) + 'K'
+    print 'Median price: $' + str(round(np.median(housing_prices),1)) + 'K'
+    print 'Standard deviation: $' + str(round(np.std(housing_prices),2)) + 'K'
 
 
 def split_data(city_data):
@@ -44,24 +40,25 @@ def split_data(city_data):
 
     # Get the features and labels from the Boston housing data
     X, y = city_data.data, city_data.target
-
-    ###################################
-    ### Step 2. YOUR CODE GOES HERE ###
-    ###################################
+        
+    # Split the data into training and test sets (70-30 split)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
 
     return X_train, y_train, X_test, y_test
 
 
 def performance_metric(label, prediction):
     """Calculate and return the appropriate error performance metric."""
-
+    
     ###################################
     ### Step 3. YOUR CODE GOES HERE ###
     ###################################
 
     # The following page has a table of scoring functions in sklearn:
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    pass
+    
+    
+    return r2_score(label, prediction)
 
 
 def learning_curve(depth, X_train, y_train, X_test, y_test):
