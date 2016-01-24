@@ -6,14 +6,14 @@ import pylab as pl
 from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.cross_validation import train_test_split
-from sklearn.metrics import r2_score
+from sklearn.metrics import median_absolute_error
+from sklearn import grid_search
 
 def load_data():
     """Load the Boston dataset."""
 
     boston = datasets.load_boston()
     return boston
-
 
 def explore_city_data(city_data):
     """Calculate the Boston housing statistics."""
@@ -50,15 +50,7 @@ def split_data(city_data):
 def performance_metric(label, prediction):
     """Calculate and return the appropriate error performance metric."""
     
-    ###################################
-    ### Step 3. YOUR CODE GOES HERE ###
-    ###################################
-
-    # The following page has a table of scoring functions in sklearn:
-    # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    
-    
-    return r2_score(label, prediction)
+    return median_absolute_error(label, prediction)
 
 
 def learning_curve(depth, X_train, y_train, X_test, y_test):
@@ -149,24 +141,16 @@ def fit_predict_model(city_data):
     # Setup a Decision Tree Regressor
     regressor = DecisionTreeRegressor()
 
-    parameters = {'max_depth':(1,2,3,4,5,6,7,8,9,10)}
-
-    ###################################
-    ### Step 4. YOUR CODE GOES HERE ###
-    ###################################
-
-    # 1. Find an appropriate performance metric. This should be the same as the
-    # one used in your performance_metric procedure above:
-    # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
-
-    # 2. We will use grid search to fine tune the Decision Tree Regressor and
-    # obtain the parameters that generate the best training performance. Set up
-    # the grid search object here.
-    # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
+    parameters = {'max_depth':(1,2,3,4,5,6,7,8,9,10)}    
+        
+    reg = grid_search.GridSearchCV(regressor, parameters, scoring='median_absolute_error')
 
     # Fit the learner to the training data to obtain the best parameter set
     print "Final Model: "
     print reg.fit(X, y)
+    
+    # I added this. I don't see how it prints out the model depth otherwise.
+    print reg.best_params_
     
     # Use the model to predict the output of a particular sample
     x = [11.95, 0.00, 18.100, 0, 0.6590, 5.6090, 90.00, 1.385, 24, 680.0, 20.20, 332.09, 12.13]
@@ -174,7 +158,6 @@ def fit_predict_model(city_data):
     print "House: " + str(x)
     print "Prediction: " + str(y)
 
-In the case of the documentation page for GridSearchCV, it might be the case that the example is just a demonstration of syntax for use of the function, rather than a statement about 
 def main():
     """Analyze the Boston housing data. Evaluate and validate the
     performanance of a Decision Tree regressor on the housing data.
